@@ -1,21 +1,19 @@
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Modal from "@mui/material/Modal";
-import IconButton from "@mui/material/IconButton";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import RestApiService from "../services/RestApiService";
+import RestApiService from "../../services/RestApiService";
 import React from "react";
+import Product from "../../types/Product";
 
 const defaultTheme = createTheme();
 
-export default function RegisterUser({
+export default function CreateProduct({
   open,
   onClose,
 }: {
@@ -27,31 +25,31 @@ export default function RegisterUser({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const name = data.get("name")?.toString() || "";
-    const taxNumber = data.get("taxNumber")?.toString() || "";
-    const email = data.get("email")?.toString() || "";
-    const phone = data.get("phone")?.toString() || "";
-    const password = data.get("password")?.toString() || "";
-    console.log("Data", name, taxNumber, email, phone, password);
+    const newProduct: Product = {
+      id: 0,
+      name: data.get("name")?.toString() || "",
+      description: data.get("description")?.toString() || "",
+      price: parseFloat(data.get("price")?.toString() || ""),
+      stock: parseFloat(data.get("stock")?.toString() || ""),
+    };
 
     try {
-      const response = await apiService.registerUser(
-        name,
-        taxNumber,
-        email,
-        phone,
-        password
-      );
+      const response = await apiService.createProduct(newProduct);
+      console.log("Create product response", response);
 
       if (response.ok) {
-        console.log("User registered");
+        console.log("Product created");
         onClose();
       } else {
         const errorData = await response.json();
-        console.error("Login failed with status", response.status, errorData);
+        console.error(
+          "Create product failed with status",
+          response.status,
+          errorData
+        );
       }
     } catch (error) {
-      console.error("Login failed", error);
+      console.error("Create product failed", error);
     }
   };
 
@@ -79,29 +77,15 @@ export default function RegisterUser({
               borderRadius: "10px",
             }}
           >
-            {/* <IconButton
-              onClick={() => setOpenRegisterModal(false)}
-              sx={{
-                position: "absolute",
-                top: 8,
-                right: 8,
-              }}
-            >
-              x
-            </IconButton> */}
             <Box
               sx={{
-                marginTop: 8,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <LockOutlinedIcon />
-              </Avatar>
               <Typography component="h1" variant="h5">
-                Cadastrar novo Usuário
+                Cadastrar novo Produto
               </Typography>
               <Box
                 component="form"
@@ -116,51 +100,40 @@ export default function RegisterUser({
                       required
                       fullWidth
                       id="name"
-                      label="Nome completo"
+                      label="Nome do Produto"
                       autoFocus
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      name="taxNumber"
+                      name="description"
+                      required
+                      fullWidth
+                      id="description"
+                      label="Descrição do Produto"
+                      autoFocus
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="price"
                       required
                       fullWidth
                       type="number"
-                      id="taxNumber"
-                      label="CPF/CNPJ"
+                      id="price"
+                      label="Preço do Produto"
                       autoFocus
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
+                      name="stock"
                       required
                       fullWidth
-                      type="email"
-                      id="email"
-                      label="Email"
-                      name="email"
-                      autoComplete="email"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      type="tel"
-                      id="phone"
-                      label="Telefone"
-                      name="phone"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      name="password"
-                      label="Senha"
-                      type="password"
-                      id="password"
-                      autoComplete="new-password"
+                      type="number"
+                      id="stock"
+                      label="Quantidade em Estoque"
+                      autoFocus
                     />
                   </Grid>
                 </Grid>

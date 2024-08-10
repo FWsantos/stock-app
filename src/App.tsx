@@ -2,10 +2,10 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import AuthProvider from "./context/AuthProvider";
 import { useEffect } from "react";
-import Login from "./components/Login";
+import Login from "./components/User/Login";
 import useToken from "./hooks/useToken";
+import ProductManager from "./components/Product/ProductManager";
 
 export default function App() {
   const { token, setToken } = useToken();
@@ -21,19 +21,20 @@ export default function App() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       {!token ? (
-        <Login setToken={setToken}></Login>
+        <Login setToken={setToken} />
       ) : (
         <>
-          <Box sx={{ my: 4 }}>
+          <Box sx={{ my: 4, display: "flex", alignItems: "center" }}>
             <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-              Material UI Vite.js example in TypeScript
+              Gerenciamento de Produtos
             </Typography>
+            <Button variant="text" onClick={logOut} sx={{ ml: "auto" }}>
+              Sair
+            </Button>
           </Box>
-          <Button variant="contained" onClick={logOut}>
-            Sair
-          </Button>
+          <ProductManager />
         </>
       )}
     </Container>
