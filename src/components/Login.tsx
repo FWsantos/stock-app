@@ -12,17 +12,39 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import RestApiService from "./../services/RestApiService";
 
 const defaultTheme = createTheme();
 
-export default function Login() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+interface LoginProps {
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function Login({ setToken }: LoginProps) {
+  const apiService = new RestApiService();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      taxNumber: data.get("taxNumber"),
-      password: data.get("password"),
-    });
+    const taxNumber = data.get("taxNumber")?.toString() || "";
+    const password = data.get("password")?.toString() || "";
+
+    try {
+      const response = await apiService.login(taxNumber, password);
+      console.log("Login response", response);
+
+      if (response.ok) {
+        const responseData = await response.json();
+        const token = responseData.data.token;
+        console.log("Token", token);
+        sessionStorage.setItem("token", JSON.stringify(token));
+        setToken(token);
+      } else {
+        console.error("Login failed with status", response.status);
+      }
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   };
 
   return (

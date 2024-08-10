@@ -5,7 +5,7 @@ class RestApiService {
     this.baseURL = "https://interview.t-alpha.com.br";
   }
 
-  async loginUser(taxNumber: string, password: string) {
+  async login(taxNumber: string, password: string) {
     return await fetch(`${this.baseURL}/api/auth/login`, {
       method: "POST",
       headers: {
@@ -18,3 +18,5 @@ class RestApiService {
     });
   }
 }
+
+export default RestApiService;
