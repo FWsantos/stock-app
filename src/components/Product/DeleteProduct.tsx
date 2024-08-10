@@ -24,13 +24,9 @@ export default function DeleteProduct({
   const apiService = new RestApiService();
 
   const onClick = () => {
-    console.log("Deleting product", product);
     try {
       apiService.deleteProduct(product.id).then((response) => {
-        console.log("Delete product response", response);
-
         if (response.ok) {
-          console.log("Product deleted");
           onClose();
         } else {
           console.error("Delete product failed with status", response.status);

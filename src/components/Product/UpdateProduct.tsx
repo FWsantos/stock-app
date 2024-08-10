@@ -35,14 +35,10 @@ export default function UpdateProduct({
       stock: parseFloat(data.get("stock")?.toString() || ""),
     };
 
-    console.log("Updating product", updatedProduct);
-
     try {
       const response = await apiService.updateProduct(updatedProduct);
-      console.log("Update product response", response);
 
       if (response.ok) {
-        console.log("Product updated");
         onClose();
       } else {
         const errorData = await response.json();

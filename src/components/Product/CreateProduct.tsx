@@ -35,10 +35,8 @@ export default function CreateProduct({
 
     try {
       const response = await apiService.createProduct(newProduct);
-      console.log("Create product response", response);
 
       if (response.ok) {
-        console.log("Product created");
         onClose();
       } else {
         const errorData = await response.json();

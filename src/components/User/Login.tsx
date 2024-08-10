@@ -2,9 +2,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -23,6 +20,7 @@ interface LoginProps {
 
 export default function Login({ setToken }: LoginProps) {
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
+  const [error, setError] = useState(false);
   const apiService = new RestApiService();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -33,16 +31,21 @@ export default function Login({ setToken }: LoginProps) {
 
     try {
       const response = await apiService.login(taxNumber, password);
-      console.log("Login response", response);
 
       if (response.ok) {
         const responseData = await response.json();
         const token = responseData.data.token;
-        console.log("Token", token);
         sessionStorage.setItem("token", JSON.stringify(token));
         setToken(token);
       } else {
-        console.error("Login failed with status", response.status);
+        if (response.status === 400) {
+          console.error(
+            "Login failed with status 400: Invalid tax number or password."
+          );
+          setError(true);
+        } else {
+          console.error("Login failed with status", response.status);
+        }
       }
     } catch (error) {
       console.error("Login failed", error);
@@ -93,7 +96,12 @@ export default function Login({ setToken }: LoginProps) {
               id="password"
               autoComplete="current-password"
             />
-
+            {error && (
+              <Typography variant="caption" color="error">
+                {" "}
+                CPF/CNPJ ou senha inválidos{" "}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth

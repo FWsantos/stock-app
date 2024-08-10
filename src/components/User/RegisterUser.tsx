@@ -8,10 +8,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Modal from "@mui/material/Modal";
-import IconButton from "@mui/material/IconButton";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RestApiService from "../../services/RestApiService";
 import React from "react";
+import { useState } from "react";
 
 const defaultTheme = createTheme();
 
@@ -22,6 +22,7 @@ export default function RegisterUser({
   open: boolean;
   onClose: () => void;
 }) {
+  const [error, setError] = useState(false);
   const apiService = new RestApiService();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,7 +33,6 @@ export default function RegisterUser({
     const email = data.get("email")?.toString() || "";
     const phone = data.get("phone")?.toString() || "";
     const password = data.get("password")?.toString() || "";
-    console.log("Data", name, taxNumber, email, phone, password);
 
     try {
       const response = await apiService.registerUser(
@@ -44,11 +44,16 @@ export default function RegisterUser({
       );
 
       if (response.ok) {
-        console.log("User registered");
         onClose();
       } else {
-        const errorData = await response.json();
-        console.error("Login failed with status", response.status, errorData);
+        if (response.status === 400) {
+          console.error(
+            "Login failed with status 400: Invalid tax number or password."
+          );
+          setError(true);
+        } else {
+          console.error("Login failed with status", response.status);
+        }
       }
     } catch (error) {
       console.error("Login failed", error);
@@ -79,19 +84,8 @@ export default function RegisterUser({
               borderRadius: "10px",
             }}
           >
-            {/* <IconButton
-              onClick={() => setOpenRegisterModal(false)}
-              sx={{
-                position: "absolute",
-                top: 8,
-                right: 8,
-              }}
-            >
-              x
-            </IconButton> */}
             <Box
               sx={{
-                marginTop: 8,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

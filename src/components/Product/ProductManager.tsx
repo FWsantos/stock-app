@@ -26,11 +26,9 @@ export default function ProductManager() {
   const fetchProducts = async () => {
     try {
       const response = await apiService.getAllProducts();
-      console.log("Products response", response);
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("Products", responseData);
         setProducts(responseData.data.products);
       } else {
         console.error("Failed to fetch products with status", response.status);
