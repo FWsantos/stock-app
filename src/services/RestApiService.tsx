@@ -69,6 +69,29 @@ class RestApiService {
       }),
     });
   }
+
+  async updateProduct(product: Product) {
+    return await fetch(
+      `${this.baseURL}/api/products/update-product/${product.id}`,
+      {
+        method: "PATCH",
+        headers: this.getHeaders(),
+        body: JSON.stringify({
+          description: product.description,
+          name: product.name,
+          price: product.price,
+          stock: product.stock,
+        }),
+      }
+    );
+  }
+
+  async deleteProduct(id: number) {
+    return await fetch(`${this.baseURL}/api/products/delete-product/${id}`, {
+      method: "DELETE",
+      headers: this.getHeaders(),
+    });
+  }
 }
 
 export default RestApiService;

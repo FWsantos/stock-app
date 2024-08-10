@@ -65,7 +65,7 @@ export default function Login({ setToken }: LoginProps) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Login
           </Typography>
           <Box
             component="form"
@@ -93,31 +93,23 @@ export default function Login({ setToken }: LoginProps) {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Login
             </Button>
             <Grid container>
-              {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid> */}
               <Grid item>
                 <Button
                   variant="text"
                   onClick={() => setOpenRegisterModal(true)}
                   sx={{ textTransform: "none" }}
                 >
-                  {"Don't have an account? Sign Up"}
+                  {"Cadastrar novo usuário"}
                 </Button>
               </Grid>
             </Grid>

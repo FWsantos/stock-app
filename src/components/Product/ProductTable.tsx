@@ -6,12 +6,19 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Product from "../../types/Product";
-import Button from "@mui/material/Button";
 import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function ProductTable({ products }: { products: Product[] }) {
+export default function ProductTable({
+  products,
+  editAction,
+  deleteAction,
+}: {
+  products: Product[];
+  editAction: (product: Product) => void;
+  deleteAction: (product: Product) => void;
+}) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -36,12 +43,20 @@ export default function ProductTable({ products }: { products: Product[] }) {
               <TableCell align="right">{product.price}</TableCell>
               <TableCell align="right">{product.stock}</TableCell>
               <TableCell align="right">
-                <IconButton color="primary" aria-label="Edita Produto">
+                <IconButton
+                  color="primary"
+                  aria-label="Edita Produto"
+                  onClick={() => editAction(product)}
+                >
                   <EditIcon></EditIcon>
                 </IconButton>
               </TableCell>
               <TableCell align="right">
-                <IconButton color="warning" aria-label="Deleta Produto">
+                <IconButton
+                  color="warning"
+                  aria-label="Deleta Produto"
+                  onClick={() => deleteAction(product)}
+                >
                   <DeleteIcon></DeleteIcon>
                 </IconButton>
               </TableCell>

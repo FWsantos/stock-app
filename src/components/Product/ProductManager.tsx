@@ -4,12 +4,24 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import ProductTable from "./ProductTable";
 import { Container, Typography } from "@mui/material";
+import Product from "../../types/Product";
 import CreateProduct from "./CreateProduct";
+import DeleteProduct from "./DeleteProduct";
+import UpdateProduct from "./UpdateProduct";
 
 export default function ProductManager() {
   const apiService = new RestApiService();
   const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product>({
+    id: 0,
+    name: "",
+    description: "",
+    price: 0,
+    stock: 0,
+  });
   const [openCreate, setOpenCreate] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const fetchProducts = async () => {
     try {
@@ -45,11 +57,37 @@ export default function ProductManager() {
       >
         Adicionar Produto
       </Button>
-      <ProductTable products={products} />
+      <ProductTable
+        products={products}
+        editAction={(product: Product) => {
+          setSelectedProduct(product);
+          setOpenUpdate(true);
+        }}
+        deleteAction={(product: Product) => {
+          setSelectedProduct(product);
+          setOpenDelete(true);
+        }}
+      />
       <CreateProduct
         open={openCreate}
         onClose={() => {
           setOpenCreate(false);
+          fetchProducts();
+        }}
+      />
+      <UpdateProduct
+        open={openUpdate}
+        product={selectedProduct}
+        onClose={() => {
+          setOpenUpdate(false);
+          fetchProducts();
+        }}
+      />
+      <DeleteProduct
+        open={openDelete}
+        product={selectedProduct}
+        onClose={() => {
+          setOpenDelete(false);
           fetchProducts();
         }}
       />
