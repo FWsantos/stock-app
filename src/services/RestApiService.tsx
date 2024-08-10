@@ -17,6 +17,28 @@ class RestApiService {
       }),
     });
   }
+
+  async registerUser(
+    name: string,
+    taxNumber: string,
+    mail: string,
+    phone: string,
+    password: string
+  ) {
+    return await fetch(`${this.baseURL}/api/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        taxNumber,
+        mail,
+        phone,
+        password,
+      }),
+    });
+  }
 }
 
 export default RestApiService;

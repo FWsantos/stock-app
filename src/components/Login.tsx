@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,14 +12,17 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RestApiService from "./../services/RestApiService";
+import RegisterUser from "./RegisterUser";
+import { useState } from "react";
 
 const defaultTheme = createTheme();
 
 interface LoginProps {
-  setToken: React.Dispatch<React.SetStateAction<string>>;
+  setToken: (token: string) => void;
 }
 
 export default function Login({ setToken }: LoginProps) {
+  const [openRegisterModal, setOpenRegisterModal] = useState(false);
   const apiService = new RestApiService();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -104,20 +106,29 @@ export default function Login({ setToken }: LoginProps) {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
-                <Link href="#" variant="body2">
+                <Button
+                  variant="text"
+                  onClick={() => setOpenRegisterModal(true)}
+                  sx={{ textTransform: "none" }}
+                >
                   {"Don't have an account? Sign Up"}
-                </Link>
+                </Button>
               </Grid>
             </Grid>
           </Box>
         </Box>
       </Container>
+
+      <RegisterUser
+        open={openRegisterModal}
+        onClose={() => setOpenRegisterModal(false)}
+      />
     </ThemeProvider>
   );
 }
